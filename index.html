@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      * {
+        margin: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas class="board"></canvas>
+    <!--default size of canvas 300x150-->
+    <!--Preloading all the images before entering the game so that the game doesn't lag-->
+    <script src="preload.js" defer></script>
+    <!--game.js will get access to the variables of preload as it is upper in the hierarchy-->
+    <script src="input.js" defer></script>
+    <script src="mario.js" defer></script>
+    <script src="game.js" defer></script>
+    <!--defer attribute is used to load js only after html canvas loads completely-->
+  </body>
+</html>
