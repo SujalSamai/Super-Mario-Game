@@ -13,13 +13,12 @@
     </style>
   </head>
   <body>
-    <canvas class="board"></canvas>
     <!--default size of canvas 300x150-->
-    <!--Preloading all the images before entering the game so that the game doesn't lag-->
+    <canvas class="board"></canvas>
+    <!-- note: if we have a js file below another js file, the below file can access all the variables of the above file like game.js can access preload.js -->
+    <!-- preload file is used to preload the assets of the game, so that after starting, game can run fastly without any loading -->
     <script src="preload.js" defer></script>
-    <!--game.js will get access to the variables of preload as it is upper in the hierarchy-->
-    <script src="input.js" defer></script>
-    <script src="mario.js" defer></script>
+    <!-- main logic for the game -->
     <script src="game.js" defer></script>
     <!--defer attribute is used to load js only after html canvas loads completely-->
   </body>
