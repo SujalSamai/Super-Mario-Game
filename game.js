@@ -7,7 +7,19 @@ const render = {
     //note: by default the tool color is black so we can change that by fill Style
     gameObj.tool.fillStyle = "#3498db";
     gameObj.tool.fillRect(0, 0, window.innerWidth, window.innerHeight); //fill rectangle is a funtion of canvas which takes starting x,y, width and height
-    gameObj.tool.drawImage(castleImage, 40, 40, 200, 150);
+    // gameObj.tool.drawImage(castleImage, 40, 40, 200, 150);
+    let mario = gameObj.entities.mario;
+    gameObj.tool.drawImage(
+      mario.sprite.img,
+      mario.sprite.srcX,
+      mario.sprite.srcY,
+      mario.sprite.srcW,
+      mario.sprite.srcH,
+      mario.posX,
+      mario.posY,
+      mario.width,
+      mario.height
+    );
   },
 };
 
@@ -22,12 +34,17 @@ class Game {
 
     const tool = canvas.getContext("2d"); //a tool to draw 2d objects
 
+    let entities = {};
     //central object which represents the current state of the game
     let gameObj = {
       tool,
       canvas,
+      entities,
     };
-
+    tool.scale(2, 2); //zooming the canvas 2times
+    //mario object
+    let mario = new Mario(spriteSheetImage, 200, 200, 18, 18);
+    gameObj.entities.mario = mario; //adding mario to the game
     render.init(gameObj); //renders the gameObj
   }
 
