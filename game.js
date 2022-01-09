@@ -26,9 +26,13 @@ const render = {
 
     let mario = gameObj.entities.mario;
     //everything in canvas is paint, so we clear the back step and redraw at front whenever we are moving
+    //for sky
     gameObj.tool.clearRect(0, 0, window.innerWidth, window.innerHeight); //clear at each step
     gameObj.tool.fillStyle = "#3498db";
     gameObj.tool.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    //for ground
+    gameObj.tool.fillStyle = "#e67e22";
+    gameObj.tool.fillRect(0, 310, window.innerWidth, window.innerHeight - 310);
     gameObj.tool.drawImage(
       mario.sprite.img,
       mario.sprite.srcX,
@@ -65,7 +69,7 @@ class Game {
       };
       tool.scale(2, 2); //zooming the canvas 2times
       //mario object
-      let mario = new Mario(spriteSheetImage, 200, 200, 18, 18);
+      let mario = new Mario(spriteSheetImage, 175, 0, 18, 18);
       gameObj.entities.mario = mario; //adding mario to the game
       render.init(gameObj); //renders the gameObj
       input.init(); //registering the event listener
@@ -78,6 +82,7 @@ class Game {
     function gameloop() {
       // console.log("Hello", Math.random());
       input.update(gameObj);
+      physics.update(gameObj); //executes the updation
       render.update(gameObj);
       requestAnimationFrame(gameloop); //syncing with every frame- infinite loop
     }

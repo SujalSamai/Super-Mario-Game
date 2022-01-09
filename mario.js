@@ -29,5 +29,6 @@ class Mario extends Entity {
     let img = new Sprite(spritesheet, 650, 3, 17, 19);
     super(img, "mario", posX, posY, width, height);
     this.velX = 1.8; //at once, it will go this much position right or left
+    this.velY = 0;
   }
 }
