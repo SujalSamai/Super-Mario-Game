@@ -21,35 +21,68 @@ const render = {
       mario.height
     );
   },
+  update(gameObj) {
+    //note: by default the tool color is black so we can change that by fill Style
+
+    let mario = gameObj.entities.mario;
+    //everything in canvas is paint, so we clear the back step and redraw at front whenever we are moving
+    gameObj.tool.clearRect(0, 0, window.innerWidth, window.innerHeight); //clear at each step
+    gameObj.tool.fillStyle = "#3498db";
+    gameObj.tool.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    gameObj.tool.drawImage(
+      mario.sprite.img,
+      mario.sprite.srcX,
+      mario.sprite.srcY,
+      mario.sprite.srcW,
+      mario.sprite.srcH,
+      mario.posX,
+      mario.posY,
+      mario.width,
+      mario.height
+    );
+  },
 };
 
 //everthing will be done by the object of class Game
 class Game {
   //init will create the basic setup of the game
   init() {
-    const canvas = document.querySelector(".board"); //taking the canvas element from html file
-    //canvas has default size of 300x150px
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
+    //Preloading the game first
+    preload().then(() => {
+      const canvas = document.querySelector(".board"); //taking the canvas element from html file
+      //canvas has default size of 300x150px
+      canvas.height = window.innerHeight;
+      canvas.width = window.innerWidth;
 
-    const tool = canvas.getContext("2d"); //a tool to draw 2d objects
+      const tool = canvas.getContext("2d"); //a tool to draw 2d objects
 
-    let entities = {};
-    //central object which represents the current state of the game
-    let gameObj = {
-      tool,
-      canvas,
-      entities,
-    };
-    tool.scale(2, 2); //zooming the canvas 2times
-    //mario object
-    let mario = new Mario(spriteSheetImage, 200, 200, 18, 18);
-    gameObj.entities.mario = mario; //adding mario to the game
-    render.init(gameObj); //renders the gameObj
+      let entities = {};
+      //central object which represents the current state of the game
+      let gameObj = {
+        tool,
+        canvas,
+        entities,
+      };
+      tool.scale(2, 2); //zooming the canvas 2times
+      //mario object
+      let mario = new Mario(spriteSheetImage, 200, 200, 18, 18);
+      gameObj.entities.mario = mario; //adding mario to the game
+      render.init(gameObj); //renders the gameObj
+      input.init(); //registering the event listener
+      this.update(gameObj); //calling update
+    });
   }
 
   //game execution
-  run() {}
+  update(gameObj) {
+    function gameloop() {
+      // console.log("Hello", Math.random());
+      input.update(gameObj);
+      render.update(gameObj);
+      requestAnimationFrame(gameloop); //syncing with every frame- infinite loop
+    }
+    gameloop();
+  }
 
   //resets the game everytime the page reloads
   reset() {
@@ -57,17 +90,14 @@ class Game {
   }
 }
 
+const game = new Game();
+game.init();
 //after preloading, we will start the game
-preload().then(function () {
-  console.log(castleImage);
-  console.log(cloudsImage);
-  console.log(mountainImage);
-  console.log(spriteSheetImage);
-  console.log(tileSetImage);
-  console.log("now game will start");
-  const game = new Game();
-
-  game.init();
-});
-
-// console.log(a);
+// preload().then(function () {
+//   console.log(castleImage);
+//   console.log(cloudsImage);
+//   console.log(mountainImage);
+//   console.log(spriteSheetImage);
+//   console.log(tileSetImage);
+//   console.log("now game will start");
+// });

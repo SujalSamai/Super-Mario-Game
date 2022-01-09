@@ -1,0 +1,14 @@
+Important aspect for any game is GameLoop
+It controls how the game runs actually like going left or right
+It consists of three parts:
+1. Init- whatever data/assets the game needs it loads (Happens for only once)
+    a. Preloading the assets
+    b. Initializing game object
+    c. initial rendering of the game
+2. Update- all the changes/occassions throughout the running of game. 
+It is sort of an infinite loop, which is synced with the screen frame
+    a. Input Update
+    b. animation update
+    c. Physics update
+    d. Render update
+3. Reset- when player either loses or quits the game (Game over Logic- Happens for only once)
