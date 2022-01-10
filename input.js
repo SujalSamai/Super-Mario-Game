@@ -17,16 +17,21 @@ let input = {
     if (this.isDown("ArrowLeft")) {
       //go left
       mario.posX -= mario.velX;
+      mario.currentDirection = "left";
+      mario.currentState = mario.states.walkingAnim;
     }
     if (this.isDown("ArrowRight")) {
       //go right
       mario.posX += mario.velX;
+      mario.currentDirection = "right";
+      mario.currentState = mario.states.walkingAnim;
     }
     // console.log(mario.velY);  at 1.1 velY, it reaches the ground
     if (this.isDown("Space")) {
       //jump
       if (mario.velY == 1.1) {
         mario.velY -= 14; //as it is negative acceleration or we are going upwards, y will be negative
+        mario.currentState = mario.states.jumpingAnim;
       }
     }
   },

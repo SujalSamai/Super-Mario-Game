@@ -11,6 +11,7 @@ let physics = {
     if (entity.posY + entity.height >= 310 && entity.velY > 0) {
       entity.posY = 292;
       entity.velY = 0;
+      entity.currentState = entity.states.standingAnim;
     }
   },
 };

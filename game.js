@@ -66,6 +66,7 @@ class Game {
         tool,
         canvas,
         entities,
+        animFrame: 0, //for delaying the frame rate of game as it is moving too fast
       };
       tool.scale(2, 2); //zooming the canvas 2times
       //mario object
@@ -82,8 +83,10 @@ class Game {
     function gameloop() {
       // console.log("Hello", Math.random());
       input.update(gameObj);
-      physics.update(gameObj); //executes the updation
+      animation.update(gameObj); //executes animation updation
+      physics.update(gameObj); //executes physics updation
       render.update(gameObj);
+      gameObj.animFrame++;
       requestAnimationFrame(gameloop); //syncing with every frame- infinite loop
     }
     gameloop();
