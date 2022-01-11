@@ -8,8 +8,8 @@ let physics = {
     entity.posY += entity.velY; //position change
   },
   checkCollision(entity) {
-    if (entity.posY + entity.height >= 310 && entity.velY > 0) {
-      entity.posY = 292;
+    if (entity.posY + entity.height >= 180 && entity.velY > 0) {
+      entity.posY = 174;
       entity.velY = 0;
       entity.currentState = entity.states.standingAnim;
     }

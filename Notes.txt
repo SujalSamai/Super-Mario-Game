@@ -17,4 +17,9 @@ It is sort of an infinite loop, which is synced with the screen frame
 ANIMATION
 Persistence of Vision- if any image is replaced within 1/16 seconds then it looks like animation
 Animations in our game:
-1. Right/Left-> Either walk, Jump or stand looking at right/left
+Right/Left-> Either walk, Jump or stand looking at right/left
+
+BACKGROUND
+consists of : Clouds, Shrubs, Bricks, Pipes, Mountains, Stair, Flag,Castle 
+We need the image and coordinates of these entities
+After getting them, we need to build them with Sprite and Entity classes
