@@ -5,7 +5,7 @@ const render = {
   //this will render at the beginning to draw the sky
   init(gameObj) {
     //note: by default the tool color is black so we can change that by fill Style
-    gameObj.tool.fillStyle = "#3498db";
+    gameObj.tool.fillStyle = "#62acff";
     gameObj.tool.fillRect(0, 0, window.innerWidth, window.innerHeight); //fill rectangle is a funtion of canvas which takes starting x,y, width and height
     // gameObj.tool.drawImage(castleImage, 40, 40, 200, 150);
     let mario = gameObj.entities.mario;
@@ -24,26 +24,39 @@ const render = {
   },
   update(gameObj) {
     //note: by default the tool color is black so we can change that by fill Style
-
+    this.updateFrame(gameObj); //updates screen frame
     let mario = gameObj.entities.mario;
     //everything in canvas is paint, so we clear the back step and redraw at front whenever we are moving
     //for sky
     gameObj.tool.clearRect(0, 0, window.innerWidth, window.innerHeight); //clear at each step
-    gameObj.tool.fillStyle = "#3498db";
+    gameObj.tool.fillStyle = "#62acff";
     gameObj.tool.fillRect(0, 0, window.innerWidth, window.innerHeight);
     //for ground
     gameObj.levelBuilder.render(gameObj);
+    let camera = gameObj.camera;
     gameObj.tool.drawImage(
       mario.sprite.img,
       mario.sprite.srcX,
       mario.sprite.srcY,
       mario.sprite.srcW,
       mario.sprite.srcH,
-      mario.posX,
+      mario.posX - camera.start,
       mario.posY,
       mario.width,
       mario.height
     );
+  },
+  updateFrame(gameObj) {
+    //distance
+    let center = gameObj.entities.mario.posX + gameObj.entities.mario.width / 2;
+    let dist = window.innerWidth / 8.5;
+    console.log(dist);
+    console.log(center);
+    console.log(gameObj.camera.start);
+    if (center < gameObj.camera.start + 2 * dist) {
+      //always true conditionx
+      gameObj.camera.start = Math.max(center - dist, 0); //math.max ensures the frame doesn't gets negative
+    }
   },
 };
 
@@ -62,12 +75,17 @@ class Game {
 
       let entities = {};
       //central object which represents the current state of the game
+      let camera = {
+        start: 0,
+        width: window.innerWidth,
+      };
       let gameObj = {
         tool,
         canvas,
         entities,
         animFrame: 0, //for delaying the frame rate of game as it is moving too fast
         levelBuilder: new LevelBuilder(levelOne),
+        camera,
       };
       tool.scale(3.5, 3.5); //zooming the canvas 2times
       //mario object

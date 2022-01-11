@@ -88,7 +88,7 @@ class LevelBuilder {
     );
     this.sceneryEntities.push(
       new Castle(
-        tileSetImage,
+        castleImage,
         level.castle[0],
         level.castle[1],
         level.castle[2],
@@ -103,19 +103,24 @@ class LevelBuilder {
     });
   }
   render(gameObj) {
+    let camera = gameObj.camera;
     gameObj.entities.scenery.forEach((entity) => {
       // console.log(entity)
-      gameObj.tool.drawImage(
-        entity.sprite.img,
-        entity.sprite.srcX,
-        entity.sprite.srcY,
-        entity.sprite.srcW,
-        entity.sprite.srcH,
-        entity.posX,
-        entity.posY,
-        entity.width,
-        entity.height
-      );
+      let entityEnd = entity.posX + entity.width; //if any entity is going outside of the rendered scene then make sure only the part that should be available on screen is rendered
+      let frameWidth = camera.start + camera.width;
+      if (entity.posX >= camera.start && entityEnd <= frameWidth) {
+        gameObj.tool.drawImage(
+          entity.sprite.img,
+          entity.sprite.srcX,
+          entity.sprite.srcY,
+          entity.sprite.srcW,
+          entity.sprite.srcH,
+          entity.posX - camera.start,
+          entity.posY,
+          entity.width,
+          entity.height
+        );
+      }
     });
   }
 }
