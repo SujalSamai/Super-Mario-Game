@@ -4,7 +4,7 @@ class Mario extends Entity {
   constructor(spritesheet, posX, posY, width, height) {
     let img = new Sprite(spritesheet, 650, 3, 17, 19);
     super(img, "mario", posX, posY, width, height);
-    this.velX = 3; //at once, it will go this much position right or left
+    this.velX = 2.5; //at once, it will go this much position right or left
     this.velY = 0;
     let self = this;
     //States-> standing, walking or jumping- every state has frame and it can be either towards right or left
