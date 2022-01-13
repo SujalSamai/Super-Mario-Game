@@ -25,7 +25,6 @@ const render = {
   update(gameObj) {
     //note: by default the tool color is black so we can change that by fill Style
     this.updateFrame(gameObj); //updates screen frame
-    let mario = gameObj.entities.mario;
     //everything in canvas is paint, so we clear the back step and redraw at front whenever we are moving
     //for sky
     gameObj.tool.clearRect(0, 0, window.innerWidth, window.innerHeight); //clear at each step
@@ -33,18 +32,29 @@ const render = {
     gameObj.tool.fillRect(0, 0, window.innerWidth, window.innerHeight);
     //for ground
     gameObj.levelBuilder.render(gameObj);
+    let mario = gameObj.entities.mario;
     let camera = gameObj.camera;
-    gameObj.tool.drawImage(
-      mario.sprite.img,
-      mario.sprite.srcX,
-      mario.sprite.srcY,
-      mario.sprite.srcW,
-      mario.sprite.srcH,
-      mario.posX - camera.start,
-      mario.posY,
-      mario.width,
-      mario.height
-    );
+    this.drawEntity(camera, mario, gameObj);
+    gameObj.entities.goombas.forEach((goomba) => {
+      this.drawEntity(camera, goomba, gameObj);
+    });
+  },
+  drawEntity(camera, entity, gameObj) {
+    let entityEnd = entity.posX + entity.width; //if any entity is going outside of the rendered scene then make sure only the part that should be available on screen is rendered
+    let frameWidth = camera.start + camera.width;
+    if (entity.posX >= camera.start && entityEnd <= frameWidth) {
+      gameObj.tool.drawImage(
+        entity.sprite.img,
+        entity.sprite.srcX,
+        entity.sprite.srcY,
+        entity.sprite.srcW,
+        entity.sprite.srcH,
+        entity.posX - camera.start,
+        entity.posY,
+        entity.width,
+        entity.height
+      );
+    }
   },
   updateFrame(gameObj) {
     //distance
@@ -86,11 +96,18 @@ class Game {
         animFrame: 0, //for delaying the frame rate of game as it is moving too fast
         levelBuilder: new LevelBuilder(levelOne),
         camera,
+        reset: this.reset,
       };
       tool.scale(3.5, 3.5); //zooming the canvas 2times
       //mario object
       let mario = new Mario(spriteSheetImage, 175, 0, 18, 18);
       gameObj.entities.mario = mario; //adding mario to the game
+      gameObj.entities.goombas = [];
+      levelOne.goombas.forEach((gCord) => {
+        gameObj.entities.goombas.push(
+          new Goomba(spriteSheetImage, gCord[0], gCord[1], gCord[2], gCord[3])
+        );
+      });
       gameObj.entities.scenery = [];
       render.init(gameObj); //renders the gameObj
       input.init(); //registering the event listener
@@ -104,6 +121,7 @@ class Game {
       // console.log("Hello", Math.random());
       input.update(gameObj);
       animation.update(gameObj); //executes animation updation
+      movement.update(gameObj);
       physics.update(gameObj); //executes physics updation
       render.update(gameObj);
       gameObj.animFrame++;
