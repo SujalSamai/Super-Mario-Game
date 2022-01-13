@@ -2,11 +2,9 @@ let physics = {
   update(gameObj) {
     // this.checkCollision(gameObj.entities.mario); //checks collision
     this.gravity(gameObj.entities.mario); //updates mario
-    gameObj.entities,
-      goombas,
-      forEach((goomba) => {
-        this.gravity(goomba);
-      });
+    gameObj.entities.goombas.forEach((goomba) => {
+      this.gravity(goomba);
+    });
     this.bgEntityCollision(gameObj);
 
     this.marioFallingCheck(gameObj);
