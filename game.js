@@ -38,6 +38,9 @@ const render = {
     gameObj.entities.goombas.forEach((goomba) => {
       this.drawEntity(camera, goomba, gameObj);
     });
+    gameObj.entities.koopas.forEach((koopa) => {
+      this.drawEntity(camera, koopa, gameObj);
+    });
   },
   drawEntity(camera, entity, gameObj) {
     let entityEnd = entity.posX + entity.width; //if any entity is going outside of the rendered scene then make sure only the part that should be available on screen is rendered
@@ -103,9 +106,15 @@ class Game {
       let mario = new Mario(spriteSheetImage, 175, 0, 18, 18);
       gameObj.entities.mario = mario; //adding mario to the game
       gameObj.entities.goombas = [];
+      gameObj.entities.koopas = [];
       levelOne.goombas.forEach((gCord) => {
         gameObj.entities.goombas.push(
           new Goomba(spriteSheetImage, gCord[0], gCord[1], gCord[2], gCord[3])
+        );
+      });
+      levelOne.koopas.forEach((kCord) => {
+        gameObj.entities.koopas.push(
+          new Koopa(spriteSheetImage, kCord[0], kCord[1], kCord[2], kCord[3])
         );
       });
       gameObj.entities.scenery = [];
