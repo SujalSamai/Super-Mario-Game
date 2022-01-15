@@ -29,6 +29,7 @@ class Mario extends Entity {
       standLeft: new Sprite(spritesheet, 860, 21, 16, 16),
       jumpRight: new Sprite(spritesheet, 731, 5, 16, 16),
       jumpLeft: new Sprite(spritesheet, 778, 22, 16, 16),
+      dead: new Sprite(spritesheet, 748, 5, 16, 16), //at mario's death, this animation will be played
     };
     //function of animation for every state
     this.states = {
@@ -66,6 +67,9 @@ class Mario extends Entity {
         } else {
           self.sprite = self.animFrame.jumpRight;
         }
+      },
+      dead() {
+        self.sprite = self.animFrame.dead;
       },
     };
     this.currentDirection = "right"; //current direction of mario, by default right

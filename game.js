@@ -63,9 +63,9 @@ const render = {
     //distance
     let center = gameObj.entities.mario.posX + gameObj.entities.mario.width / 2;
     let dist = window.innerWidth / 8.5;
-    console.log(dist);
-    console.log(center);
-    console.log(gameObj.camera.start);
+    // console.log(dist);
+    // console.log(center);
+    // console.log(gameObj.camera.start);
     if (center < gameObj.camera.start + 2 * dist) {
       //always true conditionx
       gameObj.camera.start = Math.max(center - dist, 0); //math.max ensures the frame doesn't gets negative
@@ -100,6 +100,7 @@ class Game {
         levelBuilder: new LevelBuilder(levelOne),
         camera,
         reset: this.reset,
+        userControl: true, //user can not control the game once he is dead
       };
       tool.scale(3.5, 3.5); //zooming the canvas 2times
       //mario object

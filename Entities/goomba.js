@@ -37,6 +37,14 @@ class Goomba extends Entity {
           }
         },
       },
+      squashed: {
+        movement() {
+          self.velX = 0;
+        },
+        animation() {
+          self.sprite = self.animFrame.squashed;
+        },
+      },
     };
     this.currentDirection = "left"; //current direction of mario, by default right
     this.currentState = this.states.walkingAnim;
