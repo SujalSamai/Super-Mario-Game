@@ -19,31 +19,54 @@ let physics = {
   },
 
   entityMarioCol(gameObj) {
-    let { goombas, mario } = gameObj.entities;
+    let { goombas, mario, koopas } = gameObj.entities;
     goombas.forEach((goomba) => {
       if (this.checkRectCollision(goomba, mario)) {
         this.handleCollision(mario, goomba, gameObj);
       }
     });
+    koopas.forEach((koopa) => {
+      if (this.checkRectCollision(koopa, mario)) {
+        this.handleCollision(mario, koopa, gameObj);
+      }
+    });
   },
   handleCollision(mario, entity, gameObj) {
     //check from which direction collision happened with the entity
-    if (entity.type == "goomba") {
+    if (entity.type == "goomba" || entity.type == "koopa") {
       //collision from left
       if (mario.posX > entity.posX && mario.posY == 175.2) {
         // console.log(mario.posY, "left");
-        mario.posX = entity.posX - mario.width;
-        if (entity.currentState != entity.states.squashed) {
+
+        if (
+          entity.currentState != entity.states.squashed &&
+          entity.type == "goomba"
+        ) {
           //death of mario only happens if the entity is not squashed
           this.marioDeath(gameObj, mario);
+        } else if (entity.type == "koopa") {
+          if (entity.currentState == entity.states.hiding) {
+            this.koopaSlide(entity, mario);
+          } else {
+            this.marioDeath(gameObj, mario);
+          }
         }
       }
       //collision from  right
       if (mario.posX < entity.posX && mario.posY == 175.2) {
         // console.log(mario.posY, "right");
-        mario.posX = entity.posX + mario.width;
-        if (entity.currentState != entity.states.squashed) {
+
+        if (
+          entity.currentState != entity.states.squashed &&
+          entity.type == "goomba"
+        ) {
           this.marioDeath(gameObj, mario);
+        } else if (entity.type == "koopa") {
+          if (entity.currentState == entity.states.hiding) {
+            this.koopaSlide(entity, mario);
+          } else {
+            this.marioDeath(gameObj, mario);
+          }
         }
       }
       //collision from top - death of enemy
@@ -52,22 +75,53 @@ let physics = {
         mario.posX < entity.posX + entity.width &&
         mario.posX + mario.width > entity.posX
       ) {
-        if (
+        if (mario.pointer != "dead" && entity.type == "koopa") {
+          if (entity.currentState == entity.states.walkingAnim) {
+            this.koopaHide(entity, mario);
+          } else if (entity.currentState == entity.states.hiding) {
+            this.koopaSlide(entity, mario);
+          } else {
+            this.enemyDeath(gameObj, entity, mario);
+          }
+        } else if (
           entity.currentState != entity.states.squashed &&
-          mario.pointer != "dead"
+          mario.pointer != "dead" &&
+          entity.type == "goomba"
         ) {
           this.enemyDeath(gameObj, entity, mario);
         }
       }
     }
   },
+
   enemyDeath(gameObj, entity, mario) {
-    entity.pointer = "squashed";
-    entity.currentState = entity.states.squashed;
+    if (entity.type == "goomba") {
+      entity.pointer = "squashed";
+      entity.currentState = entity.states.squashed;
+    } else if (entity.type == "koopa") {
+      entity.velX += 5;
+      entity.velY -= 14;
+    }
     setTimeout(() => {
-      let idx = gameObj.entities.goombas.indexOf(entity); //finding the index to which number of element, mario has squashed
-      delete gameObj.entities.goombas[idx]; //we have squashed so we need to remove the enemy
+      if (entity.type == "goomba") {
+        let idx = gameObj.entities.goombas.indexOf(entity); //finding the index to which number of element, mario has squashed
+        delete gameObj.entities.goombas[idx]; //we have squashed so we need to remove the enemy
+      } else if (entity.type == "koopa") {
+        let idx = gameObj.entities.koopas.indexOf(entity); //finding the index to which number of element, mario has squashed
+        delete gameObj.entities.koopas[idx]; //we have squashed so we need to remove the enemy
+      }
     }, 200);
+  },
+  koopaHide(entity, mario) {
+    entity.currentState = entity.states.hiding;
+    entity.posX =
+      mario.currentDirection == "left" ? entity.posX - 10 : entity.posX + 10;
+  },
+  koopaSlide(entity, mario) {
+    entity.currentState = entity.states.sliding;
+    entity.currentDirection = mario.currentDirection;
+    entity.posX =
+      mario.currentDirection == "left" ? entity.posX - 10 : entity.posX + 10;
   },
   marioDeath(gameObj, mario) {
     mario.velX = 0;
@@ -92,6 +146,7 @@ let physics = {
       this.bgCollision(koopa, gameObj);
     });
   },
+
   bgCollision(entity, gameObj) {
     let scenery = gameObj.entities.scenery;
     scenery.forEach((scene) => {
