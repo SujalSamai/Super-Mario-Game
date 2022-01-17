@@ -1,7 +1,7 @@
 class LevelBuilder {
   constructor(level) {
     this.sceneryEntities = [];
-
+    this.bricks = [];
     level.ground.forEach((gCord) => {
       this.sceneryEntities.push(
         new Ground(tileSetImage, gCord[0], gCord[1], gCord[2], gCord[3])
@@ -62,9 +62,14 @@ class LevelBuilder {
         )
       );
     });
-    level.stairs.forEach((brick) => {
+    level.stairs.forEach((stair) => {
       this.sceneryEntities.push(
-        new Stair(tileSetImage, brick[0], brick[1], brick[2], brick[3])
+        new Stair(tileSetImage, stair[0], stair[1], stair[2], stair[3])
+      );
+    });
+    level.bricks.forEach((brick) => {
+      this.bricks.push(
+        new Brick(tileSetImage, brick[0], brick[1], brick[2], brick[3])
       );
     });
     // single entites
@@ -101,26 +106,36 @@ class LevelBuilder {
     this.sceneryEntities.forEach((entity) => {
       gameObj.entities.scenery.push(entity);
     });
+    this.bricks.forEach((entity) => {
+      gameObj.entities.bricks.push(entity);
+    });
   }
   render(gameObj) {
     let camera = gameObj.camera;
     gameObj.entities.scenery.forEach((entity) => {
       // console.log(entity)
-      let entityEnd = entity.posX + entity.width; //if any entity is going outside of the rendered scene then make sure only the part that should be available on screen is rendered
-      let frameWidth = camera.start + camera.width;
-      if (entity.posX >= camera.start && entityEnd <= frameWidth) {
-        gameObj.tool.drawImage(
-          entity.sprite.img,
-          entity.sprite.srcX,
-          entity.sprite.srcY,
-          entity.sprite.srcW,
-          entity.sprite.srcH,
-          entity.posX - camera.start,
-          entity.posY,
-          entity.width,
-          entity.height
-        );
-      }
+      this.drawEntity(entity, camera, gameObj);
     });
+    gameObj.entities.bricks.forEach((brick) => {
+      // console.log(entity)
+      this.drawEntity(brick, camera, gameObj);
+    });
+  }
+  drawEntity(entity, camera, gameObj) {
+    let entityEnd = entity.posX + entity.width; //if any entity is going outside of the rendered scene then make sure only the part that should be available on screen is rendered
+    let frameWidth = camera.start + camera.width;
+    if (entity.posX >= camera.start && entityEnd <= frameWidth) {
+      gameObj.tool.drawImage(
+        entity.sprite.img,
+        entity.sprite.srcX,
+        entity.sprite.srcY,
+        entity.sprite.srcW,
+        entity.sprite.srcH,
+        entity.posX - camera.start,
+        entity.posY,
+        entity.width,
+        entity.height
+      );
+    }
   }
 }
