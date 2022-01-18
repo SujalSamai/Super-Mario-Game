@@ -41,6 +41,9 @@ const render = {
     gameObj.entities.koopas.forEach((koopa) => {
       this.drawEntity(camera, koopa, gameObj);
     });
+    gameObj.entities.particles.forEach((particle) => {
+      this.drawEntity(camera, particle, gameObj);
+    });
   },
   drawEntity(camera, entity, gameObj) {
     let entityEnd = entity.posX + entity.width; //if any entity is going outside of the rendered scene then make sure only the part that should be available on screen is rendered
@@ -109,6 +112,7 @@ class Game {
       gameObj.entities.goombas = [];
       gameObj.entities.koopas = [];
       gameObj.entities.bricks = [];
+      gameObj.entities.particles = [];
       levelOne.goombas.forEach((gCord) => {
         gameObj.entities.goombas.push(
           new Goomba(spriteSheetImage, gCord[0], gCord[1], gCord[2], gCord[3])
