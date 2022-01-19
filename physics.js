@@ -22,7 +22,7 @@ let physics = {
   },
 
   entityMarioCol(gameObj) {
-    let { goombas, mario, koopas, bricks } = gameObj.entities;
+    let { goombas, mario, koopas, bricks, blocks } = gameObj.entities;
     goombas.forEach((goomba) => {
       if (this.checkRectCollision(goomba, mario)) {
         this.handleCollision(mario, goomba, gameObj);
@@ -41,6 +41,14 @@ let physics = {
           brick.createParticles(gameObj);
           let idx = gameObj.entities.bricks.indexOf(brick);
           gameObj.entities.bricks.splice(idx, 1);
+        }
+      }
+    });
+    blocks.forEach((block) => {
+      if (this.checkRectCollision(block, mario)) {
+        let wantToReveal = this.handleDirec(block, mario);
+        if (wantToReveal) {
+          block.currentState = block.states.emptyAnim;
         }
       }
     });
@@ -212,7 +220,7 @@ let physics = {
       scene.posX + scene.posY > entity.posX &&
       entity.velY < 0
     ) {
-      if (scene.type == "brick") {
+      if (scene.type == "brick" || scene.type == "block") {
         entity.posY = scene.posY + scene.height;
         entity.velY = 1.1;
         return true;
