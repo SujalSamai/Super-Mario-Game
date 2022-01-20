@@ -11,18 +11,38 @@ let physics = {
     gameObj.entities.particles.forEach((particle) => {
       this.gravity(particle);
     });
+    gameObj.entities.mushrooms.forEach((mushroom) => {
+      this.gravity(mushroom);
+    });
+    this.staticEntityCol(gameObj);
     this.entityMarioCol(gameObj);
     this.bgEntityCollision(gameObj);
-
     this.marioFallingCheck(gameObj);
   },
   gravity(entity) {
     entity.velY += 1.1; //acceleration
     entity.posY += entity.velY; //position change
   },
-
+  staticEntityCol(gameObj) {
+    let { mushrooms, blocks, bricks } = gameObj.entities;
+    mushrooms.forEach((mushroom) => {
+      blocks.forEach((block) => {
+        if (this.checkRectCollision(block, mushroom)) {
+          this.handleDirec(block, mushroom);
+        }
+      });
+    });
+    mushrooms.forEach((mushroom) => {
+      bricks.forEach((brick) => {
+        if (this.checkRectCollision(brick, mushroom)) {
+          this.handleDirec(brick, mushroom);
+        }
+      });
+    });
+  },
   entityMarioCol(gameObj) {
-    let { goombas, mario, koopas, bricks, blocks } = gameObj.entities;
+    let { goombas, mario, koopas, bricks, blocks, mushrooms } =
+      gameObj.entities;
     goombas.forEach((goomba) => {
       if (this.checkRectCollision(goomba, mario)) {
         this.handleCollision(mario, goomba, gameObj);
@@ -50,12 +70,21 @@ let physics = {
         if (wantToReveal && block.currentState != block.states.emptyAnim) {
           if (block.content == "coin") {
             block.createCoin(gameObj);
+          } else {
+            block.createMushroom(gameObj);
           }
           block.currentState = block.states.emptyAnim;
         }
       }
     });
+    mushrooms.forEach((mushroom, idx) => {
+      if (this.checkRectCollision(mario, mushroom)) {
+        console.log("mushroom consumed");
+        mushrooms.splice(idx, 1);
+      }
+    });
   },
+
   handleCollision(mario, entity, gameObj) {
     //check from which direction collision happened with the entity
     if (entity.type == "goomba" || entity.type == "koopa") {
@@ -163,12 +192,16 @@ let physics = {
     let mario = gameObj.entities.mario;
     let goombas = gameObj.entities.goombas;
     let koopas = gameObj.entities.koopas;
+    let mushrooms = gameObj.entities.mushrooms;
     this.bgCollision(mario, gameObj);
     goombas.forEach((goomba) => {
       this.bgCollision(goomba, gameObj);
     });
     koopas.forEach((koopa) => {
       this.bgCollision(koopa, gameObj);
+    });
+    mushrooms.forEach((mushroom) => {
+      this.bgCollision(mushroom, gameObj);
     });
   },
 
@@ -232,7 +265,11 @@ let physics = {
     if (entity.posX < scene.posX && entity.posY >= scene.posY) {
       // left
       entity.posX = scene.posX - entity.width;
-      if (entity.type == "goomba" || entity.type == "koopa") {
+      if (
+        entity.type == "goomba" ||
+        entity.type == "koopa" ||
+        entity.type == "mushroom"
+      ) {
         entity.currentDirection =
           entity.currentDirection == "left" ? "right" : "left";
       }
@@ -240,7 +277,11 @@ let physics = {
     // right
     if (entity.posX > scene.posX && entity.posY >= scene.posY) {
       entity.posX = scene.posX + scene.width;
-      if (entity.type == "goomba" || entity.type == "koopa") {
+      if (
+        entity.type == "goomba" ||
+        entity.type == "koopa" ||
+        entity.type == "mushroom"
+      ) {
         entity.currentDirection =
           entity.currentDirection == "left" ? "right" : "left";
       }

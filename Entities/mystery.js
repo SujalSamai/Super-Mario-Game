@@ -22,7 +22,7 @@ class Block extends Entity {
     let coin = new Coin(
       spriteSheetImage,
       this.posX + 4,
-      this.posY - 12,
+      this.posY - 14,
       10,
       10
     );
@@ -31,5 +31,15 @@ class Block extends Entity {
       let idx = gameObj.entities.coins.indexOf(coin);
       gameObj.entities.coins.splice(idx, 1);
     }, 300);
+  }
+  createMushroom(gameObj) {
+    let mushroom = new Mushroom(
+      spriteSheetImage,
+      this.posX + 4,
+      this.posY - 15,
+      15,
+      15
+    );
+    gameObj.entities.mushrooms.push(mushroom);
   }
 }
