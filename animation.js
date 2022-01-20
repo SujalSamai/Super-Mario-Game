@@ -14,5 +14,8 @@ let animation = {
     gameObj.entities.blocks.forEach((block) => {
       block.currentState(gameObj);
     });
+    gameObj.entities.coins.forEach((coin) => {
+      coin.currentState.animation(gameObj);
+    });
   },
 };

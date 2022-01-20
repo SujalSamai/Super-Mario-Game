@@ -44,6 +44,9 @@ const render = {
     gameObj.entities.particles.forEach((particle) => {
       this.drawEntity(camera, particle, gameObj);
     });
+    gameObj.entities.coins.forEach((coin) => {
+      this.drawEntity(camera, coin, gameObj);
+    });
   },
   drawEntity(camera, entity, gameObj) {
     let entityEnd = entity.posX + entity.width; //if any entity is going outside of the rendered scene then make sure only the part that should be available on screen is rendered
@@ -114,6 +117,7 @@ class Game {
       gameObj.entities.bricks = [];
       gameObj.entities.particles = [];
       gameObj.entities.blocks = [];
+      gameObj.entities.coins = [];
       levelOne.goombas.forEach((gCord) => {
         gameObj.entities.goombas.push(
           new Goomba(spriteSheetImage, gCord[0], gCord[1], gCord[2], gCord[3])
@@ -148,7 +152,8 @@ class Game {
 
   //resets the game everytime the page reloads
   reset() {
-    location.reload();
+    document.location.reload(true);
+    // window.location.href = window.location.href;
   }
 }
 
